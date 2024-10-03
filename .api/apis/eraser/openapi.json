@@ -1,0 +1,281 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Render",
+    "version": "v1.0"
+  },
+  "servers": [
+    {
+      "url": "https://app.eraser.io/",
+      "description": "Eraser Server for ChatGPT"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/render/prompt": {
+      "post": {
+        "operationId": "generate-diagram-from-prompt",
+        "externalDocs": {
+          "description": "API documentation for DiagramGPT",
+          "url": "https://docs.eraser.io/reference"
+        },
+        "summary": "From Prompt (DiagramGPT)",
+        "tags": [
+          "Generate Diagram"
+        ],
+        "responses": {
+          "200": {
+            "description": "The result of the diagram generation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "imageUrl": {
+                      "type": "string",
+                      "description": "URL of the generated diagram as a PNG image"
+                    },
+                    "createEraserFileUrl": {
+                      "type": "string",
+                      "description": "URL to edit the generated diagram"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is missing the 'text' parameter"
+          },
+          "403": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Eraser was unable to generate a result"
+          },
+          "503": {
+            "description": "Service temporarily unavailable. This may be the result of too many requests."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "type",
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "description": "The input code or natural langauge which describes a diagram"
+                  },
+                  "diagramType": {
+                    "type": "string",
+                    "description": "Select desired diagram type. Will automatically detect diagram type when unspecified.",
+                    "enum": [
+                      "sequence-diagram",
+                      "entity-relationship-diagram",
+                      "cloud-architecture-diagram",
+                      "flowchart-diagram"
+                    ]
+                  },
+                  "background": {
+                    "type": "boolean",
+                    "description": "Select transparent (false) or solid (true) background. Defaults to false."
+                  },
+                  "theme": {
+                    "type": "string",
+                    "description": "Select \"light\" or \"dark\" theme. Defaults to \"light\".",
+                    "enum": [
+                      "light",
+                      "dark"
+                    ]
+                  },
+                  "scale": {
+                    "type": "string",
+                    "description": "Scale factor of returned image file. Use 1, 2, or 3. Defaults to 2.",
+                    "enum": [
+                      "1",
+                      "2",
+                      "3"
+                    ]
+                  },
+                  "returnFile": {
+                    "type": "boolean",
+                    "description": "Select whether to return an image file (true) or an image URL (false)."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/render/elements": {
+      "post": {
+        "operationId": "generate-diagram-from-element",
+        "externalDocs": {
+          "description": "API documentation for DiagramGPT",
+          "url": "https://docs.eraser.io/reference"
+        },
+        "summary": "From Eraser DSL",
+        "tags": [
+          "Generate Diagram"
+        ],
+        "responses": {
+          "200": {
+            "description": "The result of the diagram generation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "imageUrl": {
+                      "type": "string",
+                      "description": "URL of the generated diagram as a PNG image"
+                    },
+                    "createEraserFileUrl": {
+                      "type": "string",
+                      "description": "URL to edit the generated diagram"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is missing the 'text' parameter"
+          },
+          "403": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Eraser was unable to generate a result"
+          },
+          "503": {
+            "description": "Service temporarily unavailable. This may be the result of too many requests."
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "elements"
+                ],
+                "properties": {
+                  "elements": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "diagramType",
+                        "code"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "description": "Select element type. Use 'diagram' to generate a diagram",
+                          "default": "diagram"
+                        },
+                        "diagramType": {
+                          "type": "string",
+                          "description": "Select one of four diagram types.",
+                          "enum": [
+                            "sequence-diagram",
+                            "entity-relationship-diagram",
+                            "cloud-architecture-diagram",
+                            "flowchart-diagram"
+                          ]
+                        },
+                        "code": {
+                          "type": "string",
+                          "description": "Provide valid Eraser DSL code that describes a diagram"
+                        }
+                      }
+                    },
+                    "description": "Eraser canvas element objects"
+                  },
+                  "background": {
+                    "type": "boolean",
+                    "description": "Select transparent (false) or solid (true) background. Defaults to false."
+                  },
+                  "theme": {
+                    "type": "string",
+                    "description": "Select \"light\" or \"dark\" theme. Defaults to \"light\".",
+                    "enum": [
+                      "light",
+                      "dark"
+                    ]
+                  },
+                  "scale": {
+                    "type": "string",
+                    "description": "Scale factor of returned image file. Use 1, 2, or 3. Defaults to 2.",
+                    "enum": [
+                      "1",
+                      "2",
+                      "3"
+                    ]
+                  },
+                  "returnFile": {
+                    "type": "boolean",
+                    "description": "Select whether to return an image file (true) or an image URL (false)."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "scheme": "bearer",
+        "type": "http"
+      }
+    },
+    "schemas": {
+      "diagramElement": {
+        "type": "object",
+        "required": [
+          "type",
+          "diagramType",
+          "code"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Select element type. Use 'diagram' to generate a diagram",
+            "default": "diagram"
+          },
+          "diagramType": {
+            "type": "string",
+            "description": "Select one of four diagram types.",
+            "enum": [
+              "sequence-diagram",
+              "entity-relationship-diagram",
+              "cloud-architecture-diagram",
+              "flowchart-diagram"
+            ]
+          },
+          "code": {
+            "type": "string",
+            "description": "Provide valid Eraser DSL code that describes a diagram"
+          }
+        }
+      }
+    }
+  }
+}

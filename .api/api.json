@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "eraser",
+      "source": "@eraser/v1.0#xhwadu739lup3w21s",
+      "integrity": "sha512-mnIcFTpq5tk5LQcR2KWlZpcUAToUywAd8St9mCvm4yfawA7WygN5J4JDENC6O2I5fXOSWqtodVy5mRqFjgQl6g==",
+      "installerVersion": "6.1.2"
+    }
+  ]
+}
